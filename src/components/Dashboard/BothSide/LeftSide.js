@@ -20,6 +20,7 @@ import {
     TableHead,
     TableRow,
     Paper,
+    TablePagination,
 } from '@mui/material';
 import './Left.scss'
 
@@ -45,6 +46,17 @@ function LeftSide({ logout }) {
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -226,7 +238,20 @@ function LeftSide({ logout }) {
                                 ))}
                             </TableBody>
                         </Table>
+                        <TablePagination
+                            className="table-pagination"
+                            sx={{ color: 'white' }}
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
                     </TableContainer>
+
+
                 </div>
             </div>
         )
