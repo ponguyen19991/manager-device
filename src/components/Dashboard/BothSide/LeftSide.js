@@ -1,28 +1,44 @@
 import React, { useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
 
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import logo from '../../../assets/images/logo.png'
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
+import {
+    Box,
+    Toolbar,
+    IconButton,
+    Typography,
+    Menu,
+    Avatar,
+    Button,
+    Tooltip,
+    MenuItem,
+    TextField,
+    InputAdornment,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+} from '@mui/material';
 import './Left.scss'
 
-import { CiSearch } from "react-icons/ci";
+import logo from '../../../assets/images/logo.png'
+import { CiSearch, CiBellOn } from "react-icons/ci";
+import { TiBell } from "react-icons/ti";
 import { LuPlus } from "react-icons/lu";
 
-import { height } from '@mui/system';
+function createData(id, name, urgency, type, status, updated) {
+    return { id, name, urgency, type, status, updated };
+}
+
+const rows = [
+    createData('1', 'RAM KINGSTON 1', 'Critical', 'PC', 'New', 'Yesterday'),
+    createData('2', 'RAM KINGSTON 2', 'High', 'PC', 'New', 'Yesterday'),
+    createData('3', 'RAM KINGSTON 3', 'Standard', 'PC', 'New', 'Yesterday'),
+    createData('4', 'RAM KINGSTON 4', 'Standard', 'PC', 'New', 'Yesterday'),
+    createData('5', 'RAM KINGSTON 5', 'Standard', 'PC', 'New', 'Yesterday'),
+];
 
 function LeftSide({ logout }) {
     const { user, isAuthenticated } = useAuth0()
@@ -44,6 +60,19 @@ function LeftSide({ logout }) {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    function getUrgencyColor(urgency) {
+        switch (urgency) {
+            case 'Critical':
+                return '#DF5B5B';
+            case 'High':
+                return '#C87551';
+            case 'Standard':
+                return '#EFD560';
+            default:
+                return '';
+        }
+    }
 
     return (
         isAuthenticated && (
@@ -159,6 +188,45 @@ function LeftSide({ logout }) {
                             </Button>
                         </div>
                     </Toolbar>
+
+                    <TableContainer component={Paper} sx={{ background: 'transparent', mt: 4 }}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow sx={{ color: '#8E8E8E' }}>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell align="left">Urgency</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell align="left">Type</TableCell>
+                                    <TableCell align="left">Status</TableCell>
+                                    <TableCell align="left">Updated</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow
+                                        key={row.name}
+                                        sx={{
+                                            '&:last-child td, &:last-child th': { border: 0 },
+                                            borderLeft: `5px solid ${getUrgencyColor(row.urgency)}`,
+                                            '&:hover td': { background: 'rgba(255, 255, 255, 0.1)' },
+                                        }}
+                                    >
+                                        <TableCell align="left" sx={{ color: 'white' }}>{row.id}</TableCell>
+                                        <TableCell align="left" sx={{ color: getUrgencyColor(row.urgency) }}>{row.urgency}</TableCell>
+                                        <TableCell sx={{ color: 'white' }}>
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="left" sx={{ color: '#8E8E8E' }}>{row.type}</TableCell>
+                                        <TableCell align="left" sx={{ color: 'white' }}>
+                                            <TiBell style={{ color: '#DF5B5B', fontSize: '20px', verticalAlign: 'middle', marginRight: '10px' }} />
+                                            {row.status}
+                                        </TableCell>
+                                        <TableCell align="left" sx={{ color: '#8E8E8E' }}>{row.updated}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </div>
             </div>
         )
