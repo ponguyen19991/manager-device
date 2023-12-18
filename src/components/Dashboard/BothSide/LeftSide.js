@@ -35,10 +35,13 @@ function createData(id, name, urgency, type, status, updated) {
 
 const rows = [
     createData('1', 'RAM KINGSTON 1', 'Critical', 'PC', 'New', 'Yesterday'),
-    createData('2', 'RAM KINGSTON 2', 'High', 'PC', 'New', 'Yesterday'),
+    createData('2', 'RAM KINGSTON 2', 'High', 'Printer', 'New', 'Yesterday'),
     createData('3', 'RAM KINGSTON 3', 'Standard', 'PC', 'New', 'Yesterday'),
     createData('4', 'RAM KINGSTON 4', 'Standard', 'PC', 'New', 'Yesterday'),
-    createData('5', 'RAM KINGSTON 5', 'Standard', 'PC', 'New', 'Yesterday'),
+    createData('5', 'RAM KINGSTON 5', 'Standard', 'Other', 'New', 'Yesterday'),
+    createData('6', 'RAM KINGSTON 6', 'High', 'PC', 'New', 'Yesterday'),
+    createData('7', 'RAM KINGSTON 6', 'Standard', 'PC', 'New', 'Yesterday'),
+    createData('8', 'RAM KINGSTON 6', 'Critical', 'PC', 'New', 'Yesterday'),
 ];
 
 function LeftSide({ logout }) {
@@ -46,16 +49,16 @@ function LeftSide({ logout }) {
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const rowsPerPageDefault = 5;
+    const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageDefault);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPage(0); // Reset to the first page when changing rowsPerPage
     };
 
     const handleOpenNavMenu = (event) => {
@@ -201,7 +204,7 @@ function LeftSide({ logout }) {
                         </div>
                     </Toolbar>
 
-                    <TableContainer component={Paper} sx={{ background: 'transparent', mt: 4 }}>
+                    <TableContainer component={Paper} sx={{ background: 'transparent', mt: 4, height: 380, overflowY: 'auto' }}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow sx={{ color: '#8E8E8E' }}>
@@ -214,9 +217,9 @@ function LeftSide({ logout }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
+                                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                                     <TableRow
-                                        key={row.name}
+                                        key={row.id}
                                         sx={{
                                             '&:last-child td, &:last-child th': { border: 0 },
                                             borderLeft: `5px solid ${getUrgencyColor(row.urgency)}`,
@@ -250,6 +253,7 @@ function LeftSide({ logout }) {
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     </TableContainer>
+
 
 
                 </div>
